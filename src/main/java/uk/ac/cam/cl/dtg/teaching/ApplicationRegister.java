@@ -18,6 +18,8 @@ public class ApplicationRegister extends Application {
 	public Set<Class<?>> getClasses() {
 		Set<Class<?>> result = new HashSet<Class<?>>();
 		result.add(ExampleController.class);
+		result.add(ClientResponseFailureHandler.class);
+		result.add(ExceptionHandler.class);
 		return result;
 	}
 
