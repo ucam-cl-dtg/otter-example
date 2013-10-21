@@ -1,4 +1,4 @@
-package uk.ac.cam.cl.dtg.teaching;
+package uk.ac.cam.cl.dtg.teaching.models;
 
 public class Fruit {
 

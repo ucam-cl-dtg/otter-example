@@ -1,4 +1,4 @@
-package uk.ac.cam.cl.dtg.teaching;
+package uk.ac.cam.cl.dtg.teaching.exceptions;
 
 class SerializableStackTraceElement {
 	private String className;

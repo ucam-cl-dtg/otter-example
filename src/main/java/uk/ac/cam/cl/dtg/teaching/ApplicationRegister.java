@@ -5,6 +5,10 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
+import uk.ac.cam.cl.dtg.teaching.controllers.ExampleController;
+import uk.ac.cam.cl.dtg.teaching.exceptions.ClientResponseFailureHandler;
+import uk.ac.cam.cl.dtg.teaching.exceptions.ExceptionHandler;
+
 /**
  * This class registers the resteasy handlers. The name is important since it is
  * used as a String in HttpServletDispatcherV3

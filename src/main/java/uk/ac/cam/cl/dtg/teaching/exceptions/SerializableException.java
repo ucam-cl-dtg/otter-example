@@ -1,20 +1,34 @@
-package uk.ac.cam.cl.dtg.teaching;
+package uk.ac.cam.cl.dtg.teaching.exceptions;
 
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+@JsonAutoDetect(fieldVisibility = Visibility.NONE, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
 public class SerializableException extends Exception {
 
 	private static final long serialVersionUID = 759370006263359407L;
 
+	@JsonSerialize
 	private String wrappedClassName;
+	
+	@JsonSerialize
 	private String message;
+	
+	@JsonSerialize
 	private SerializableException cause;
+	
+	@JsonSerialize
 	private SerializableStackTraceElement[] wrappedStackTrace;
 
-	public SerializableException() {}
-	
+	public SerializableException() {
+	}
+
 	public SerializableException(Throwable toSerialize) {
 		this.message = toSerialize.getMessage();
 		this.wrappedClassName = toSerialize.getClass().getName();
@@ -24,8 +38,6 @@ public class SerializableException extends Exception {
 		setStackTrace(toSerialize.getStackTrace());
 	}
 
-	
-	
 	public String getWrappedClassName() {
 		return wrappedClassName;
 	}
