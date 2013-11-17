@@ -16,7 +16,7 @@ public class SerializableException extends Exception {
 	private static final long serialVersionUID = 759370006263359407L;
 
 	@JsonSerialize
-	private String wrappedClassName;
+	private String className;
 
 	@JsonSerialize
 	private String message;
@@ -24,15 +24,15 @@ public class SerializableException extends Exception {
 	@JsonSerialize
 	private SerializableException cause;
 
-	@JsonSerialize
-	private SerializableStackTraceElement[] wrappedStackTrace;
+	@JsonSerialize()
+	private SerializableStackTraceElement[] serializableStackTrace;
 
 	public SerializableException() {
 	}
 
 	public SerializableException(Throwable toSerialize) {
 		this.message = toSerialize.getMessage();
-		this.wrappedClassName = toSerialize.getClass().getName();
+		this.className = toSerialize.getClass().getName();
 		if (toSerialize.getCause() != null) {
 			this.cause = new SerializableException(toSerialize.getCause());
 		}
@@ -41,32 +41,32 @@ public class SerializableException extends Exception {
 
 	@JsonCreator
 	public SerializableException(
-			@JsonProperty("wrappedClassName") String wrappedClassName,
+			@JsonProperty("className") String className,
 			@JsonProperty("message") String message,
 			@JsonProperty("cause") SerializableException cause,
-			@JsonProperty("wrappedStackTrace") SerializableStackTraceElement[] wrappedStackTrace) {
+			@JsonProperty("serializableStackTrace") SerializableStackTraceElement[] stackTrace) {
 		super();
-		this.wrappedClassName = wrappedClassName;
+		this.className = className;
 		this.message = message;
 		this.cause = cause;
-		this.wrappedStackTrace = wrappedStackTrace;
+		this.serializableStackTrace = stackTrace;
 	}
 
-	public String getWrappedClassName() {
-		return wrappedClassName;
+	public String getClassName() {
+		return className;
 	}
 
-	public void setWrappedClassName(String wrappedClassName) {
-		this.wrappedClassName = wrappedClassName;
+	public void setClassName(String className) {
+		this.className = className;
 	}
 
-	public SerializableStackTraceElement[] getWrappedStackTrace() {
-		return wrappedStackTrace;
+	public SerializableStackTraceElement[] getSerializableStackTrace() {
+		return serializableStackTrace;
 	}
 
-	public void setWrappedStackTrace(
-			SerializableStackTraceElement[] wrappedStackTrace) {
-		this.wrappedStackTrace = wrappedStackTrace;
+	public void setSerializableStackTrace(
+			SerializableStackTraceElement[] serializableStackTrace) {
+		this.serializableStackTrace = serializableStackTrace;
 	}
 
 	public void setMessage(String message) {
@@ -101,7 +101,7 @@ public class SerializableException extends Exception {
 	@Override
 	public String toString() {
 		String message = getLocalizedMessage();
-		return this.wrappedClassName + (message == null ? "" : ": " + message);
+		return this.className + (message == null ? "" : ": " + message);
 	}
 
 	@Override
@@ -118,7 +118,7 @@ public class SerializableException extends Exception {
 	public void printStackTrace(PrintWriter writer) {
 		synchronized (writer) {
 			writer.println(toString());
-			for (SerializableStackTraceElement s : wrappedStackTrace) {
+			for (SerializableStackTraceElement s : serializableStackTrace) {
 				writer.println("\tat " + s);
 			}
 			writer.flush();
@@ -132,23 +132,22 @@ public class SerializableException extends Exception {
 
 	@Override
 	public StackTraceElement[] getStackTrace() {
-		StackTraceElement[] result = new StackTraceElement[wrappedStackTrace.length];
+		StackTraceElement[] result = new StackTraceElement[serializableStackTrace.length];
 		for (int i = 0; i < result.length; ++i) {
 			result[i] = new StackTraceElement(
-					wrappedStackTrace[i].getClassName(),
-					wrappedStackTrace[i].getMethodName(),
-					wrappedStackTrace[i].getFileName(),
-					wrappedStackTrace[i].getLineNumber());
+					serializableStackTrace[i].getClassName(),
+					serializableStackTrace[i].getMethodName(),
+					serializableStackTrace[i].getFileName(),
+					serializableStackTrace[i].getLineNumber());
 		}
 		return result;
 	}
 
 	@Override
 	public void setStackTrace(StackTraceElement[] stackTrace) {
-		wrappedStackTrace = new SerializableStackTraceElement[stackTrace.length];
+		this.serializableStackTrace = new SerializableStackTraceElement[stackTrace.length];
 		for (int i = 0; i < stackTrace.length; ++i) {
-			wrappedStackTrace[i] = new SerializableStackTraceElement(
-					stackTrace[i]);
+			this.serializableStackTrace[i] = new SerializableStackTraceElement(stackTrace[i]);
 		}
 	}
 }
