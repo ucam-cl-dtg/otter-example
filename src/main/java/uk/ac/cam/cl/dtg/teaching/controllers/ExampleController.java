@@ -34,7 +34,7 @@ public class ExampleController implements ExampleApi {
 	@Override
 	public Fruit proxy(String type) throws Exception {
 		ClientRequestFactory c = new ClientRequestFactory(UriBuilder.fromUri(
-				"http://localhost:8080/api-template/api/example/")
+				"http://localhost:8080/api-template/api")
 				.build());
 		Fruit apple = c.createProxy(ExampleApi.class).load(type);
 		return apple;
