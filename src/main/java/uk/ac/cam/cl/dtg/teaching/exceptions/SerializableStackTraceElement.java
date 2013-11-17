@@ -1,16 +1,44 @@
 package uk.ac.cam.cl.dtg.teaching.exceptions;
 
-class SerializableStackTraceElement {
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+@JsonAutoDetect(fieldVisibility = Visibility.NONE, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, creatorVisibility = Visibility.NONE, isGetterVisibility = Visibility.NONE)
+public class SerializableStackTraceElement {
+
+	@JsonSerialize
 	private String className;
+
+	@JsonSerialize
 	private String methodName;
+
+	@JsonSerialize
 	private String fileName;
+
+	@JsonSerialize
 	private int lineNumber;
 
+	@JsonCreator
+	public SerializableStackTraceElement(
+			@JsonProperty("className") String className,
+			@JsonProperty("methodName") String methodName,
+			@JsonProperty("fileName") String fileName,
+			@JsonProperty("lineNumber") int lineNumber) {
+		super();
+		this.className = className;
+		this.methodName = methodName;
+		this.fileName = fileName;
+		this.lineNumber = lineNumber;
+	}
+
 	public SerializableStackTraceElement(StackTraceElement e) {
-		className = e.getClassName();
-		methodName = e.getMethodName();
-		fileName = e.getFileName();
-		lineNumber = e.getLineNumber();
+		this.className = e.getClassName();
+		this.methodName = e.getMethodName();
+		this.fileName = e.getFileName();
+		this.lineNumber = e.getLineNumber();
 	}
 
 	public SerializableStackTraceElement() {

@@ -7,22 +7,23 @@ import java.io.PrintWriter;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
-@JsonAutoDetect(fieldVisibility = Visibility.NONE, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
+@JsonAutoDetect(fieldVisibility = Visibility.NONE, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, creatorVisibility = Visibility.NONE, isGetterVisibility = Visibility.NONE)
 public class SerializableException extends Exception {
 
 	private static final long serialVersionUID = 759370006263359407L;
 
 	@JsonSerialize
 	private String wrappedClassName;
-	
+
 	@JsonSerialize
 	private String message;
-	
+
 	@JsonSerialize
 	private SerializableException cause;
-	
+
 	@JsonSerialize
 	private SerializableStackTraceElement[] wrappedStackTrace;
 
@@ -36,6 +37,19 @@ public class SerializableException extends Exception {
 			this.cause = new SerializableException(toSerialize.getCause());
 		}
 		setStackTrace(toSerialize.getStackTrace());
+	}
+
+	@JsonCreator
+	public SerializableException(
+			@JsonProperty("wrappedClassName") String wrappedClassName,
+			@JsonProperty("message") String message,
+			@JsonProperty("cause") SerializableException cause,
+			@JsonProperty("wrappedStackTrace") SerializableStackTraceElement[] wrappedStackTrace) {
+		super();
+		this.wrappedClassName = wrappedClassName;
+		this.message = message;
+		this.cause = cause;
+		this.wrappedStackTrace = wrappedStackTrace;
 	}
 
 	public String getWrappedClassName() {
